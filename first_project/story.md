@@ -58,3 +58,8 @@
 > 3. RandomForest의 경우 Scaler 영향을 받지 않기 때문에 Scaler작업은 하지 않았으며, 이후 데이터 x, y(credit, 라벨값)로 구분하고 Train_split으로 x_train, x_test, y_train, y_test로 구분했다
 > 4. 이후 모든 자료를 sklearn의 Labelencorder 기능을 통해 Label작업을 했다.
 > 5. RandomForest작업 결과 성능이 65%가 나와 추가적인 작업이 필요할듯하다.
+- 3일차 결과
+>1. 랜덤포레스트로 accuracy 결과값을 확인한 결과 정확도 65%으로 낮은 성능을 보였다
+>2. 하지만, 데이터셋 제공한 대회에서 원하는 출력값을 log_loss로 결과값을 출력해보니 0.95에 가까운 값을 얻었다.
+>3. 낮은 값이 나올수록 성능이 높기에 3일차에 데이터의 스케일과 여러 머신러닝 기법을 사용해 성능을 높여야겠다.
+>4. 3일차 계획은 일단 principal을 통해 차원을 축소해서 머신러닝을 돌려보고, ligthGBN, X부스트까지 사용해서 
