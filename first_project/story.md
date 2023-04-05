@@ -91,6 +91,45 @@
 >>1. 범주형 자료의 경우 Labelincorder를 사용할지, onehotEncorder를 사용할지 회의 결과 자료의 순서가 데이터에 영향을 안 미치기에 Labelencorder로 사용 결정
 >>2. 각자의 모델링 기법을 통해 Log_loss 결과를 확인 결과 MinMaxScaler로 voting기법으로 분석 시 0.74로 가장 낮게 나옴
 >>3. 의견 조율 결과 데이터 분석 과정에서 데이터를 어떻게 가공하냐에 따라 성능이 차이가 크기 때문에 각자 데이터 전처리, 분석 과정을 거친 후 성능이 좋은 결과를 베이스로 다시 작업 하기로 결정
+>2. 역할 분담
+>> 데이터 분석의 효율성을 위한 팀원의 일부는 연속형 데이터를 도수분표를 기준으로 등급별로 나눠서 머신러닝 모델의 성능을 테스트하고, 팀원의 일부는 스케일을 조정하고 연속형 자료를 그대로 사용해서 머신러닝 모델링의 성능을 테스트했다.
 - 오늘의 진행 예정
 > 1. 일단 Pipeline으로 여러 모델링 기법을 함수로 만든 후 모델링마다 성능을 테스트 하기
 > 2. 성능 테스트 후 데이터 전처리 과정 및 분석 재작업 후 모델링 재작업 
+- 진행 결과
+> 1. 성능 테스트 결과 xgbcBoost, randomForest 두 모델이 좋은 성능을 보여서 2개를 기준으로 GridSerch 및 log_loss값을 만드는 함수 생성
+```
+def log_loss_gridCv(x_train, y_train, x_test, y_test):
+    rf_clf = RandomForestClassifier()
+    xg = XGBClassifier()
+    
+    # RandomFroest
+    params = {
+    "n_estimators" : [100, 500, 1000,2000],
+    "random_state" : [13]}
+    clf = GridSearchCV(rf_clf, param_grid=params, cv = 5, scoring="neg_log_loss")
+    clf.fit(x_train, y_train)
+    pred = clf.predict_proba(x_test)
+    print("RandomForest : ",clf.best_estimator_)
+    print("RandomForest_result : ",log_loss(y_test, pred))
+    
+    # xgbcBoost
+    xg = XGBClassifier()
+    params = {
+        "n_estimators" : [100, 500, 1000,2000],
+        "max_depth" : [3, 5, 7, 9],
+        "random_state" : [13]
+    }
+    clf = GridSearchCV(xg, param_grid=params, cv=2, scoring="neg_log_loss")
+    clf.fit(x_train, y_train)
+
+    pred = clf.predict_proba(x_test)
+    print("xgbm_best : ",clf.best_estimator_)
+    print("xgbm_result : ",log_loss(y_test, pred))
+```
+>2. 해당 함수를 통해 데이터 분석 및 전처리 후 성능 테스트 후 결과 확인하고, 분석 작업 반복 예정
+>3. randomForest와 xgbcBoost 성능 테스트 결과 0.77과 0.75 출력
+>4. 이번에는 범주형 자료를 합쳐서 새로운 컬럼을 만들어서 시도해봐야겠다. -> 차와 부동산 유무를 합치고. 수입형태와 교육형태와 가족형태와 집형태를 합쳐서 새로운 컬럼을 만들어서 성능을 확인해보자
+>5. 시각화 자료를 보면서 떠오른 생각이 **여러 컬럼을 하나의 컬럼으로 합쳐서(str형태) 새로운 고유값 컬럼을 만든다면 다른 결과가 나오지 않을까 생각**
+>6. 5번의 작업을 위해 여러 컬럼을 조합하는 과정에서 **카드 발급 날짜만 다르고 다른 모든 데이터가 같은(동일인물) index발견**
+>7. 계획 새로운 컬럼으로 한 사람의 고유 ID를 식별할 수 있게 몇개의 컬럼을 조합해서 한 사람의 카드 발급 날짜를 하나의 시계열 데이터로 사용할 수도 있지 않을까 생각함.
