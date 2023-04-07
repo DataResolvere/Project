@@ -133,3 +133,80 @@ def log_loss_gridCv(x_train, y_train, x_test, y_test):
 >5. 시각화 자료를 보면서 떠오른 생각이 **여러 컬럼을 하나의 컬럼으로 합쳐서(str형태) 새로운 고유값 컬럼을 만든다면 다른 결과가 나오지 않을까 생각**
 >6. 5번의 작업을 위해 여러 컬럼을 조합하는 과정에서 **카드 발급 날짜만 다르고 다른 모든 데이터가 같은(동일인물) index발견**
 >7. 계획 새로운 컬럼으로 한 사람의 고유 ID를 식별할 수 있게 몇개의 컬럼을 조합해서 한 사람의 카드 발급 날짜를 하나의 시계열 데이터로 사용할 수도 있지 않을까 생각함.
+## 6일차, 데이터 분석 및 모델링의 성능 테스트의 반복
+- 화상 회의 결과
+>1. 일단 내가 만든 xgbcBoost, RandomFrest GridsearchCV 및 logLoss 성능 테스트 함수를 공유하고, 각자의 데이터 분석을 기반으로 성능을 테스트 후 가장 좋은 성능을 기반으로 다시 파생적으로 분석하기로 결정
+>2. 이후 clusterig 작업을 plus해서 log_loss값을 낮추기 위한 작업 예정
+>3. 분석 과정에서 연속형 자료의 등급별 구간 도수분표를 통한 머신러닝 모델링의 성능은 모두 좋지 못한 결과를 얻어서 연속형 자료를 그 자체로 쓰거나, 스케일값만 바꾸기로 결정.
+- 진행 상황
+>1. 일단 나는 라벨값 credit 0, 1, 2 3개를 구분해서 각 라벨값에 따른 시각화를 기반으로 label를 구분할 수 있는 feature을 파악
+>2. 하지만 중복값을 제거하고 시각화를 하고, 중복값을 허용해서 시각화를 해도 큰 의미있는 컬럼을 발견하지 못함
+>3. 그래서 일단 개인의 고유 번호로 사용할 수 있게 카드 발급 날짜를 제외한 다른 컬럼을 합친 하나의 컬럼을 생성
+>4. 이후 각 값들을 LabelEncorder를 진행하고, "income_total", "DAYS_BIRTH", "DAYS_EMPLOYED", "begin_month", "occyp_type","SSN" 6개의 컬럼으로 xgbcboost와 RandomForest로 성능 테스트 시작
+>5. 또한, log_loss 성능 테스트 함수에 lgbmboost를 추가해서 3개의 머신러닝 모델 중 가장 최적화된 모델을 찾아 성능 테스트 실행
+>6. 데이터를 관찰하면서 가장 많이 생각한 것은 "어떤 데이터를 줘야 컴퓨터가 잘 학습해서 새로운 데이터를 넣었을 때 잘 예측할까?"를 중점으로 생각했을 때
+>7. 중복된 데이터에서 한 사람이 여러 카드를 발급받을 경우 카드 발급 개월을 제외한 다른 데이터는 동일하니까 해당 컬럼을 제외하고 고유ID에 해당하는 데이터 컬럼을 주면 컴퓨터가 잘 학습할 수 있지 않을까? 생각해서 SSN(개인 고유 번호) 컬럼을 생성하고 Encoder작업 후 성능 테스트 시작
+```
+def log_loss_gridCv(x_train, y_train, x_test, y_test):
+    rf_clf = RandomForestClassifier()
+    xg = XGBClassifier()
+    lgbm = LGBMClassifier()
+
+
+    
+    # RandomFroest
+    params = {
+    "n_estimators" : [1000, 1500, 2000],
+    "random_state" : [13]}
+    clf = GridSearchCV(rf_clf, param_grid=params, cv = 5, scoring="neg_log_loss")
+    clf.fit(x_train, y_train)
+    pred = clf.predict_proba(x_test)
+    print("RandomForest : ",clf.best_estimator_)
+    print("RandomForest_result : ",log_loss(y_test, pred))
+    
+    pred = clf.predict(x_test)
+    print('RandomForest : ', clf.best_estimator_)
+    print("RandomForest_result : ", accuracy_score(y_test, pred))
+    
+    print("=" * 50)
+    
+    # xgbcBoost
+    xg = XGBClassifier()
+    params = {
+        "n_estimators" : [1000, 1500, 2000],
+        "max_depth" : [5, 7, 9],
+        "random_state" : [13]
+    }
+    clf = GridSearchCV(xg, param_grid=params, cv=2, scoring="neg_log_loss")
+    clf.fit(x_train, y_train)
+
+
+    pred = clf.predict_proba(x_test)
+    print("xgbm_best : ",clf.best_estimator_)
+    print("xgbm_result : ",log_loss(y_test, pred))
+    pred = clf.predict(x_test)
+    print('xgbm_best : ', clf.best_estimator_)
+    print("xgbm_result : ", accuracy_score(y_test, pred))
+    
+    
+    print("=" * 50)
+    
+    #lgbm
+    params = {
+    "n_estimators" : [1000, 1500, 2000],
+    "random_state" : [13]
+    }
+    clf = GridSearchCV(lgbm, param_grid=params, cv=2, scoring="neg_log_loss")
+    clf.fit(x_train, y_train)
+
+
+    pred = clf.predict_proba(x_test)
+    print("lgbm_best : ",clf.best_estimator_)
+    print("lgbm_result : ",log_loss(y_test, pred))
+    
+    pred = clf.predict(x_test)
+    print('lgbm_best : ', clf.best_estimator_)
+    print("lgbm_result : ", accuracy_score(y_test, pred))
+```
+- 진행 결과
+>1. 회의해서 principal 기법을 통해 차원을 축소해서 분석할 경우 가장 낮은 log_loss값이 나왔으며, 해당 방법을 통해 정확도를 높일 수 있었다.
