@@ -271,4 +271,6 @@ ac_score :  0.7659352142110762
 >1. 금융 데이터 분석 시 clustering으로 집단 구성 및 PCA로 연속형 자료 차원을 축소 시도
 >2. SMOTE_overSampling으로 라벨값 비대칭 정보를 보완하고자 시도
 - 시도 결과
-- 
+>1. PCA 및 Clustering을 사용한 결과 acuuracy는 0.01 정도 올라갔으며, f1-score는 0.01~0.02, 0에 대한 Recall값은 0.01올라갔다.
+>2. 그리고 SMOTE_OverSampling을 통해 Label값을 똑같이 형성한 후 성능을 테스트한 결과 Recall값의 개선은 없으나 Precision의 값이 크게 떨어짐
+>3. 하지만, OverSampling을 통해 과적합을 막은 것 같다고 판단하여 해당 overSampling 데이터를 바탕으로 성능 개선 시
