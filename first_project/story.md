@@ -273,4 +273,10 @@ ac_score :  0.7659352142110762
 - 시도 결과
 >1. PCA 및 Clustering을 사용한 결과 acuuracy는 0.01 정도 올라갔으며, f1-score는 0.01~0.02, 0에 대한 Recall값은 0.01올라갔다.
 >2. 그리고 SMOTE_OverSampling을 통해 Label값을 똑같이 형성한 후 성능을 테스트한 결과 Recall값의 개선은 없으나 Precision의 값이 크게 떨어짐
->3. 하지만, OverSampling을 통해 과적합을 막은 것 같다고 판단하여 해당 overSampling 데이터를 바탕으로 성능 개선 시
+>3. 하지만, OverSampling을 통해 과적합을 막은 것 같다고 판단하여 해당 overSampling 데이터를 바탕으로 성능 개선 시도
+## 11일차, OverSampling 성능 개선
+- 진행상황
+> 1. OverSampling을 통해 0에 대한 Recall값은 개선하지 못했지만, 늘린 데이터셋을 통해 과적합을 방지하고 OverSampling데이터에 대한 성능을 개선함으로써 0과 1에 대한 모든 f1-score를 개선하려고 시도
+> 2. Feature 중 고객번호와 성별을 제거한 데이터를 돌림으로써 성능 테스트한 결과한 결과 성능이 0.01정도 떨어짐
+> 3. 다음으로 Scale값을 StandardScale로 조정 후 성능을 테스트한 결과 정확도 96% 나왔으며, 0에 대한 Recall값이 0.88나오며 지금까지 제일 높은 수치를 보임
+> 4. Cat_boost를 통해 성능을 테스트 후 Feature_importance를 확인 결과 다른 Feature과 비교한 결과 높은 5개의 Feature을 데이터로 성능을 테스트한 결과 92%정확도로 성능이 떨짐짐
