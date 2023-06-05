@@ -1,3 +1,4 @@
+벨로그 : [링크](https://velog.io/@xswer19/RecyclingClassification)
 # 프로젝트 목표
 - ResNet모델을 통해 재활용 쓰레기를 9개의 범주별로 분류하는 **AI모델 구현 및 전이학습을 통한 성능 개선 검증**
 # 프로젝트 내용
