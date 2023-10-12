@@ -1,4 +1,7 @@
-벨로그 : [링크](https://velog.io/@xswer19/RecyclingClassification)
+| 코드 | 내용 | 링크  |
+|------|-----|---|
+|   Project_DataPreprocessing   |  37만장의 사진을 OpenCV를 통해 전처리 및 Pickle타입으로 공유   | [링크](https://github.com/DataResolvere/Project/blob/main/DL_Recycling_classicification/Project_DataPreprocessing.ipynb)  |
+|   Project_Model_train_and_Validation   |   Resnet 모델 구축 및 34개 모델 중 앙상블 기법으로 성능 테스트  |  [링크](https://github.com/DataResolvere/Project/blob/main/DL_Recycling_classicification/Project_Model_train_and_Validation.ipynb) |
 # 프로젝트 목표
 - ResNet모델을 통해 재활용 쓰레기를 9개의 범주별로 분류하는 **AI모델 구현 및 전이학습을 통한 성능 개선 검증**
 # 프로젝트 내용
