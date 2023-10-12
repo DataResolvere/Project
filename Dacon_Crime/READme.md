@@ -1,4 +1,7 @@
-벨로그 : [링크](https://velog.io/@xswer19/DaconAI%EB%B2%94%EC%A3%84%EC%9C%A0%ED%98%95-%EB%B6%84%EB%A5%98-%EB%8C%80%ED%9A%8C)
+| 코드 | 내용 | 링크  |
+|------|-----|---|
+|   Crime_story   |  기후 및 범죄 데이터를 바탕으로 범죄유형 예측 AI 모델 구축을 위한 전처리 및 분석   | [링크](https://github.com/DataResolvere/Project/blob/main/Dacon_Crime/Crime_story.ipynb)  |
+|   Crime_finished   |   분석 및 전처리를 기반으로 최종 AI 모델 결과물  |  [링크](https://github.com/DataResolvere/Project/blob/main/Dacon_Crime/Crime_finished.ipynb) |
 # 대회 목표
 - 범죄 발생 관련 및 기후 데이터를 통해 3개의(절도, 상해, 강도)범죄 유형을 예측하는 AI모델 구현
 # 주요 분석 및 기법
